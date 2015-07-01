@@ -1,0 +1,172 @@
+15
+Python 2.7 bugfixes en nieuwe features tot 2020.
+best upgraden naar 3
+
+16
+CPython is originele Python implementatie
+die door meeste gebruikt wordt
+
+17
+Frozen Binaries
+Om je Python program te verpakken in één executable, zonder dat je moet uitleggen hoe de user Python moet installeren.
+
+18
+IPython lijkt me populair
+IDLE minder
+
+21
+PyCharm is een heel nuttige IDE en wordt aangeraden door die mensen.
+
+22
+Python versie zou niet mogen uitmaken.
+
+33
+Verschil ints tussen Python 2 en 3
+Python 3 heeft één int type die niet kan overflowen
+
+35
+_  => het resultaat van de vorige expressie
+
+36
+Python 2: / = gehele deling
+       3: // = gehele deling
+berekeningen kunnen ander resultaat hebben!!
+
+44
+bij s.replace krijg je een nieuw stringobject!
+id(...) geeft de id van het object
+
+45
+ord = om ordinal number voor character te vinden
+chr = zet decimaal om naar karakter
+0 heeft geen speciale betekenis in python (is geen terminator, is geldige data)
+vandaar dat chr(0) '\x00' geeft (één byte zonder representatie)
+strings zijn sequenties van bytes (groot verschil Python 2 en 3)
+in Python 3 kan je 0 niet in een string steken???
+dubbele quotes voor strings mag ook (python kiest zelf single quotes)
+je kan voor double kiezen als je veel single quotes gebruikt in je tekst.
+
+48
+elementen van lijst hoeven niet van hetzelfde type te zijn
+lijsten zijn mutable (strings niet?)
+
+51
+sorted(L) geeft een kopie die gesorteerd is
+
+53
+list comprehensions
+creeer mij een nieuwe lijst (vandaar de [...]) waarvan elk element een nieuw element zal vormen, gebaseerd op iets anders (een expressie)
+kan je ook met for-lus en append, maar is minder cool
+
+55
+deze datastructuur dient om dingen op te zoeken op efficiënte manier
+key moet immutable + hashable zijn (want stel dat je er een referentie insteekt naar een object, dan zou je de waarde van die key van buitenaf kunnen veranderen)
+sleutels mogen niet kunnen veranderen (moeten hashable zijn, = moet immutable zijn)
+ints zijn immutable
+  x = 3
+  id(x)
+  x = 4
+  id(x)
+  dir(x)
+derde voorbeeld: lijst is niet immutable, dus niet te gebruiken als sleutel
+
+56
+get: om te kijken of iets bestaat, en als de sleutel niet aanwezig is in de dictionary, geef de andere waarde terug
+je kan door dict.keys() lopen en zo 
+x = { 2:3}
+x.items()
+-> resultaat is verschillend in Python 2 en Python 3
+oude python geeft een lijst (inefficient als het groot is, elementen moeten tegelijk in het geheugen zitten)
+in Python 3 => views of lazy objects
+dict.keys(), dict.values(), dict.items() geven in Python 3 objecte, in Python 2 lijsten.
+in Python 3 loop je dus door je collectie, en dat is efficienter
+als je dict.keys() wil afprinten in Python 3, best nog converteren naar lijst om af te printen
+meest notable differences tussen Python 2 en Python 3
+.items() geeft key value pair
+
+61
+gemakkelijkste is te itereren door key-values via d.items()
+
+62
+is een pak trager wegens lookup
+
+65
+tuples = lijsten die niet kunnen veranderen
+
+67
+typles meest gebruiken voor rij uit databank, rij uit cvs file => moet meestal niet veranderen (qua aantal kolommen)  Omdat aantal kolommen niet kan wijzigen is dat veiliger, mocht je het in een lijst steken zou het aantal kolommen kunnen veranderen.
+
+VRAAG: wat kan niet aangepast worden? grootte van lijst of inhoud?
+
+68
+1,2 is eigenlijk een tuple van 2 elementen die je maakt en retourneert
+
+69
+zonder die komma zou het gewoon een int zijn, met de komma wordt het een tuple
+
+help(range)
+
+de dingen in een typle kunnen enkel veranderen als ze mutable zijn
+x = (1,2)
+x[0] = 2 werkt niet
+
+x = ({})
+x = ({2:3},)
+x[0][42] = 5
+id(x[0])
+
+Google exercises zijn in Python 2
+
+74
+ternary if lijkt op dat van C
+
+82
+*li is lijst uitpakken naar individuele argumente
+sum(1,2,3)
+sum(1,2,3,4,5)
+in de lijst mogen ook verschillende types staan
+als je sum(li) doet, probeert hij een lijst bij 0 te tellen en krijg je een type error.
+
+82
+* = functie aanvaardt any number of POSITIONAL arguments
+** = functie aanvaardt any number of KEYWORD arguments
+wordt vooral gebruikt in modules met veel configuratie parameters (functie met bvb 50 parameters)
+zo moet je niet alle argumenten opschrijven, maar kan je het opzoeken in de dictionary
+**dicts zullen we niet elke dag gebruiken
+
+84
+list wordt bij reference doorgegeven, niet bij value
+maak beter een nieuwe lijst, en return die!  dan is het duidelijk dat l zal veranderen
+
+85
+str += "3" werkt niet
+als we pass bij reference doen van een immutable object,...
+voorstel: aanvaard objecten, maak nieuwe objecten, en return die als resultaat van die functie
+ga geen parameters die by reference meegegeven worden gaan manipuleren
+DE UITLEG BIJ DEZE SLIDE WAS ONDUIDELIJK VOOR MIJ HIER
+
+MODULES
+
+88
+Tijdens import van een script wordt het script gerund!
+Python doet dat maar 1 keer, als er 100 files die module importeren, gebeurt het toch maar 1 keer.
+advies: gebruik * niet om te importeren!
+sys.path is een lijst en daar kan je dus dingen aan toevoegen, (bvb relatieve locaties t.o.v. waar je je programma runt)
+Python modules met relatieve paden kan een probleem zijn.
+
+97
+Python heeft PyDoc
+
+99
+alle variablen met de naam __xxxx__ zijn dingen die door Python zelf ingevuld/gebruikt worden
+als __name__ == "__main__" dan is jouw python file als programma gerund
+als je .py als module import uitgevoerd wordt, dan is het niet __main__
+
+104
+NIET manually (lukt nog tot bvb 3 argumenten, maar daarna is het moeilijker)
+NIET getopt gebruiken (is wrapper rond C-library getopt, maar verouderd en beter niet meer gebruiken)
+WEL argparse module gebruiken (wel moeilijk te leren en te configureren)
+
+oefeningen:
+coverage is te meten!
+pip install coverage
