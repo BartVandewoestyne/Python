@@ -36,7 +36,7 @@ def from_piglatin(w):
 if __name__ == "__main__":
 
     if len(sys.argv) < 2:
-        print "ERROR: You should specify an input and output file!"
+        print("ERROR: You should specify an input and output file!")
         exit(-1)
 
     inputfile = sys.argv[1]

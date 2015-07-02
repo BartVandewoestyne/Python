@@ -1,0 +1,115 @@
+3
+'iterators' is niet de juiste term, beter 'iterables'
+demo:
+  x = 3
+  dir(x) => geeft overzicht van alle functies die op int ondersteund zijn (__str__ implementeren, of de _repr_)
+
+7
+help(print) om meer te weten
+
+10
+werken met de % operator voor formatting is de oude manier
+
+11
+vars(args)
+vars neemt object args met aantal attributen binnen, en spuwt dictionary uit
+keys = namen attributen object
+values = values attributen object
+
+12
+format is de nieuwere manier
+lijkt wat op C#
+format is een functie die je uitvoert op een string literal object
+je kan ook positioneel werken
+als je het positioneel doet, best niet by index numberen, laat Python de nummering zelf doen (want anders probleem als je er iets tussenvoegt)
+
+15
+% percentage output
+om als percentages te laten outputten
+
+16
+format heeft ook dingen om datums te formatteren
+
+19
+template_string kan iets zijn dat je uit een file leest
+
+22
+split en join worden vrij frequent gebruikt, redelijk krachtige functies
+
+25
+slices met steps en negatieve steps worden ook frequent gebruikt
+
+27
+'in' is een zeer krachtige operator in Python
+
+28
+index en find doen hetzelfde, maar als de substring niet kan gevonden worden geven ze je een error op twee verschillende manieren
+Ewoud checkt niet graag op -1, dus gebruikt liever index met een eventuele ValueError
+
+30
+replace geeft je een nieuwe string als resultaat
+
+31
+je kan in python regex'en op verschillende manieren gebruiken
+als je je regex in je loop een regex gebruikt, kan het nuttig zijn om je regex te compileren
+door op voorhand te compileren, bouw je een soort van parse-object en win je tijd
+als je maar 1 string wil checken op een regex heeft het geen voordeel om de compile te gebruiken
+
+regularexpression one.com
+RegExOne.com
+
+33
+in python 3 heeft men een onderscheid gemaakt tussen textuele data en binaire data
+
+34
+readlines = onefficiente manier?
+9/10 wil je dit doen:
+  for line in f:
+    do_something(line)
+
+38
+door
+  with open as f:
+kan je f gebruiken en hoef je zelf niet de file te closen, ook bij exceptions => moderne python
+  C++11 smart pointers
+
+x = [1, 2, 3, 4]
+enumerate(x)
+list(_)
+
+x = ["test", "blabla"]
+list(enumerate(x))
+for index,value in enumerate(x): print index
+
+40
+iterators moet eigenlijk iterables zijn
+
+41
+'rope' is een iterable
+
+42
+eerst iterator ophalen
+dan next next next doen
+StopIteration exception op het einde
+
+44
+range
+
+45
+enumerate() => om te weten met het hoeveelste element je bezig bent
+
+48
+[] produceert een nieuwe lijst
+mocht het () zijn is het geen lijst meer, maar een generator object en dan wordt die expressie uitgevoerd elke keer je erachter vraagt
+
+52
+map() is de oude manier, nu beter list comprehensions gebruiken
+
+63
+exceptions = error handling die niet negeerbaar is
+
+80
+asserts kan je opnemen in je unit tests, doe dit dan ook!
+
+82
+doctest is eigenlijk quasi hetzelfde als unit testen.
