@@ -3,12 +3,12 @@ import unittest
 
 def is_prime(n):
     """Check if the given number is a prime number."""
-    n_prime = True
-    for k in range(2, n/2+1):
-        if n % k == 0:
-            n_prime = False
+    prime = True
+    for divisor in range(2, n/2+1):
+        if n % divisor == 0:
+            prime = False
             break
-    return n_prime
+    return prime
 
 
 def is_armstrong(n):
