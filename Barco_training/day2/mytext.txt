@@ -1,0 +1,3 @@
+This is some text to test the PigLatin program.
+This is another line of text.
+And some more.
