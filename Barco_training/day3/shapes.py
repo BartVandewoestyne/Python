@@ -4,6 +4,7 @@
 
 import math
 
+
 class Square(object):
 
     def __init__(self, sidelength):
@@ -28,11 +29,12 @@ class Circle(object):
     def get_type(self):
         return "circle"
 
-def print_surface_area_of_object(object):
-    if object.get_type() == "square":
-        print("Surface area of square is {0}".format(object.get_surface_area()))
-    elif object.get_type() == "circle":
-        print("Surface area of circle is {0}".format(object.get_surface_area()))
+
+def print_surface_area_of_object(obj):
+    if obj.get_type() == "square":
+        print("Surface area of square is {0}".format(obj.get_surface_area()))
+    elif obj.get_type() == "circle":
+        print("Surface area of circle is {0}".format(obj.get_surface_area()))
     else:
         print("ERROR: cannot print surface area of this object.")
 
