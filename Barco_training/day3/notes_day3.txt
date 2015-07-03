@@ -1,0 +1,89 @@
+4 of 5
+class SomeClass(object)
+=> al dan niet de object die er staat heb je ander gedrag (afhankelijk van de Python versie die je hebt?)
+Meestal staat de object er niet (de meerwaarde om het er wel bij te zetten bij bepaalde Python versies is er, maar
+is beperkt).
+
+8
+In tegenstelling tot in C++ moet je op voorhand niet weten wat er in een object zit.
+Java en C++ moeten dat wel weten omwille van memory.
+demo:
+  class Foo:
+      def test(self): pass
+
+      x = Foo()
+      x.__dict__ => wat zijn de symbolen die op een x object bestaan?
+      x.barco = 99
+      x.__dict__
+
+Python houdt attributen van objecten (en hun values) bij in een dictionary.
+Daarom kan je op elk moment een attribuut definieren
+
+9
+typefout zorgt dat je nasty bugs kan introduceren
+demo
+del x.barco
+x.__dict__
+je kan dus ook van de buitenkant dat attribuut gaan deleten
+twee objecten van een class hoeven niet dezelfde attributen of functies hebben
+def hack(self): pass
+x.bar = hack
+je kan van buiten methodes injecteren in een object
+class Foo(): pass
+x = Foo()
+def hack(self):pass
+x.bar = hack
+x.bar()
+=> lukt niet???
+Foo.bar = hack
+del x.bar
+x.bar()
+je moet het injecteren op de class en niet op het object!
+
+11
+init methode kan ook meer variabelen hebben en die moet je dan meegeven met a = SomeClass(a, b, c,...)
+
+14
+Python heeft geen public, protected and private
+
+15
+naam prefixen met één underscore: per conventie geef je aan dat dat een variable is die intern in mijn module zit
+en waarvan je mag lezen, maar waarnaar je niet mag schrijven.
+dubble underscore: van binnen de klasse te gebruiken, van buiten moet je een name-mangled symbool gebruiken.  deze
+is dus moeilijker te bereiken van de buitenkant
+demo:
+  class Foo:
+      def __init__(self): self.__prvt = 42
+  x = Foo()
+  x.__dict__
+
+y = Foo()
+Foo.barco = 55  => globale variabele die je in een class steekt
+x.barco
+y.barco
+
+16
+In Python wordt inheritance veel minder gebruikt dan in andere talen.
+
+21
+oude manier, best niet meer doen, want afhankelijk van hoe je inheritance in elkaar zit kan je in de problemen komen.
+
+23
+__xxx__ kunnen afhankelijk van de Python versie wel eens van naam veranderen...
+
+Foo heeft __eq__ niet geïmplementeerd
+a = Foo()
+b = Foo()
+a == b
+=> vergelijkt de handles!  Niet de member variabelen!  Dus als je de member variablen wil vergelijken, dan moet
+je de __eq__ implementeren!!!
+
+29
+__bool__ was vroeger __nonzero__ (dus naam is veranderd tussen versies van Python!!! Opletten hiermee!!)
+
+31
+Dit is hoe de 'with' in Python eigenlijk werkt.
+Dat is een context manager.
+'with' zijn eigenlijk twee methoden die op de juiste moment opgeroepen worden door Python.
+
+1.3 is de basisoefening voor een latere oefening.
