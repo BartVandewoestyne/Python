@@ -1,20 +1,16 @@
-# TODO:
-#   * Did I solve it as intended?
-#   * How to implement get_type()?
-
 import math
 
 
 class Square(object):
 
-    def __init__(self, sidelength):
-        self.sidelength = sidelength
+    def __init__(self, side_length):
+        self.side_length = side_length
 
     def get_surface_area(self):
-        return self.sidelength*self.sidelength
+        return self.side_length*self.side_length
 
     def get_type(self):
-        return "square"
+        return "square with side length {0}".format(self.side_length)
 
 
 class Circle(object):
@@ -22,21 +18,16 @@ class Circle(object):
     def __init__(self, radius):
         self.radius = radius
 
+    # TODO: how to avoid typing self
     def get_surface_area(self):
         return self.radius*self.radius*math.pi
 
-    # TODO: why may this be static???
     def get_type(self):
-        return "circle"
+        return "circle with radius {0}".format(self.radius)
 
 
 def print_surface_area_of_object(obj):
-    if obj.get_type() == "square":
-        print("Surface area of square is {0}".format(obj.get_surface_area()))
-    elif obj.get_type() == "circle":
-        print("Surface area of circle is {0}".format(obj.get_surface_area()))
-    else:
-        print("ERROR: cannot print surface area of this object.")
+    print("Surface area of {0} is {1}.".format(obj.get_type(), obj.get_surface_area()))
 
 if __name__ == "__main__":
 
