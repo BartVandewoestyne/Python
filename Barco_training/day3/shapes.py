@@ -27,6 +27,9 @@ class Circle(object):
 
 
 def print_surface_area_of_object(obj):
+    """
+    Note that we can call get_type() and get_surface_area() on obj here without inheritance!
+    """
     print("Surface area of {0} is {1}.".format(obj.get_type(), obj.get_surface_area()))
 
 if __name__ == "__main__":
