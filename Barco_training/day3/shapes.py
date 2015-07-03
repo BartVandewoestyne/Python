@@ -18,7 +18,6 @@ class Circle(object):
     def __init__(self, radius):
         self.radius = radius
 
-    # TODO: how to avoid typing self
     def get_surface_area(self):
         return self.radius*self.radius*math.pi
 
