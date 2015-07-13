@@ -87,3 +87,40 @@ Dat is een context manager.
 'with' zijn eigenlijk twee methoden die op de juiste moment opgeroepen worden door Python.
 
 1.3 is de basisoefening voor een latere oefening.
+
+38
+directory wordt enkel verwijderd als ie leeg is (maar er is oplossing voor => rmtree)
+
+39
+os.walk()
+eerste niveau zegt wat subdirectories zijn en de files die onder die directory vallen
+
+43
+unpack_archive is inderdaad voor Python 3.2 en later
+als je die versie niet hebt, moet je de ZipFile library of zo gebruiken
+
+45
+switch niet tussen environ en setenv/putenv (kies één van de twee)
+
+49
+os.system is deprecated.
+nadeel is dat ie rechtstreeks naar stdout print, maar je kan niet capturen in een variable
+
+50
+nieuwe zie je minder frequent gebruikt worden
+
+52
+meest handige is subprocess.check_output
+je krijgt output terug en je kan ook niet negeren als er iets slechts gebeurd is
+
+54
+expect en pexpect nuttig voor bootloaders
+
+56
+uitermate geschikt om bootloaders te automatiseren
+
+60
+yield is eigenlijk returnen en state onthouden
+
+70
+je kan ook files fetchen vanop een samba server
