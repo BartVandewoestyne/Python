@@ -13,4 +13,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     print([arg for arg in vars(args)])
-    # TODO: how to proceed from here???
+        # hier over alles itereren, checken welk het is en dan doen wat nodig is;
+        # TODO: how to proceed from here???
