@@ -20,7 +20,7 @@ def send_mail(from_address, to_address, subject, text):
     ]) % (from_address, to_address, subject, text)
     server_ssl = smtplib.SMTP_SSL("smtp.gmail.com", 465)
     server_ssl.ehlo()
-    server_ssl.login('Bart.Vandewoestyne@gmail.com', 'EFBCED919')
+    server_ssl.login('Bart.Vandewoestyne@gmail.com', 'SomePassword')
     server_ssl.sendmail(from_address, to_address, message)
     server_ssl.close()
 
