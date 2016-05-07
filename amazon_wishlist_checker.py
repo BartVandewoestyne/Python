@@ -19,7 +19,7 @@ import argparse
 
 PRICE_LIMIT = 20
 
-def send_mail(from_address, to_address, subject, text):
+def send_mail(args, subject, text):
 
     import smtplib
 
@@ -29,11 +29,11 @@ def send_mail(from_address, to_address, subject, text):
         "Subject: %s",
         "",
         "%s"
-    ]) % (from_address, to_address, subject, text)
+    ]) % (args.email, args.email, subject, text)
     server_ssl = smtplib.SMTP_SSL("smtp.gmail.com", 465)
     server_ssl.ehlo()
     server_ssl.login(args.google_login, args.google_pwd)
-    server_ssl.sendmail(from_address, to_address, message)
+    server_ssl.sendmail(args.email, args.email, message)
     server_ssl.close()
 
 
@@ -49,7 +49,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def amazon_login():
+def amazon_login(args):
 
     browser = mechanize.Browser()
     browser.set_handle_robots(False)
@@ -63,10 +63,10 @@ def amazon_login():
     return browser
 
 
-if __name__ == "__main__":
+def main():
 
     args = parse_arguments()
-    browser = amazon_login()
+    browser = amazon_login(args)
     
     setlocale(LC_NUMERIC, '')
     wishlist_page = browser.open("https://www.amazon.fr/gp/registry/wishlist/1YNQGVVG7J07D/ref=topnav_lists_1")
@@ -94,9 +94,13 @@ if __name__ == "__main__":
         email_text += book[1] + "  " + book[0] + "\n"
     
     if cheap_books:
-        send_mail(args.email,
-                  args.email,
+        send_mail(args,
                   "Cheap book available alert!",
                   email_text.encode('utf-8'))
     
     print email_text.encode('utf-8')
+
+
+if __name__ == "__main__":
+
+    main()
