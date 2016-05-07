@@ -7,7 +7,7 @@ import mechanize
 import re
 from bs4 import BeautifulSoup
 from locale import *
-
+import argparse
 
 def send_mail(from_address, to_address, subject, text):
     import smtplib
@@ -20,17 +20,25 @@ def send_mail(from_address, to_address, subject, text):
     ]) % (from_address, to_address, subject, text)
     server_ssl = smtplib.SMTP_SSL("smtp.gmail.com", 465)
     server_ssl.ehlo()
-    server_ssl.login('Bart.Vandewoestyne@gmail.com', 'SomePassword')
+    server_ssl.login(args.google_login, args.google_pwd)
     server_ssl.sendmail(from_address, to_address, message)
     server_ssl.close()
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-al", "--amazon_login", help="Your Amazon login name", required=True)
+parser.add_argument("-ap", "--amazon_pwd", help="Your Amazon password", required=True)
+parser.add_argument("-gl", "--google_login", help="Your Google email address", required=True)
+parser.add_argument("-gp", "--google_pwd", help="Your Google password", required=True)
+args = parser.parse_args()
 
 browser = mechanize.Browser()
 browser.set_handle_robots(False)
 
 response = browser.open("https://www.amazon.fr/gp/sign-in.html")
 browser.select_form("signIn")
-browser.form['email'] = 'Bart.Vandewoestyne@telenet.be'
-browser.form['password'] = 'SomePassword'
+browser.form['email'] = args.amazon_login
+browser.form['password'] = args.amazon_pwd
 browser.submit()
 
 PRICE_LIMIT = 25
@@ -57,4 +65,6 @@ if email_text:
     send_mail("Bart.Vandewoestyne@telenet.be",
               "Bart.Vandewoestyne@telenet.be",
               "Cheap book available alert!",
-              email_text)
+              email_text.encode('utf-8'))
+
+print email_text.encode('utf-8')
