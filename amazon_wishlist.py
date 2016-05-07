@@ -1,7 +1,15 @@
-# This script checks your Amazon.fr wishlist and sends an email if
-# some of the books are below a certain maximum limit.
+# Do you have a book wishlist on http://www.amazon.fr ?  Did you know that the
+# prices of second handed books vary quite a lot and are sometimes quite low?
+# Maybe you want to know when the prices are low, but without having to check
+# the website every day?  Automation to the resque!
 #
-# TODO: refactor and cleanup this rough version.
+# This script checks your Amazon.fr wishlist and sends you an email if the
+# price of certain books drop below a certain limit.  You can run it daily from
+# a cronjob so you'll always get notified when some book in your wishlist drops
+# below a certain price.
+#
+# TODO: this is only a very rough first draft.  We should clean it up
+#       and refactor it.
 
 import mechanize
 import re
@@ -41,7 +49,7 @@ browser.form['email'] = args.amazon_login
 browser.form['password'] = args.amazon_pwd
 browser.submit()
 
-PRICE_LIMIT = 25
+PRICE_LIMIT = 15
 setlocale(LC_NUMERIC, '')
 wishlist_page = browser.open("https://www.amazon.fr/gp/registry/wishlist/1YNQGVVG7J07D/ref=topnav_lists_1")
 soup = BeautifulSoup(wishlist_page.read(), 'html.parser')
