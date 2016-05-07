@@ -8,8 +8,7 @@
 # a cronjob so you'll always get notified when some book in your wishlist drops
 # below a certain price.
 #
-# TODO: this is only a very rough first draft.  We should clean it up
-#       and refactor it.
+# TODO: refactor some more (extract functions)
 
 import mechanize
 import re
@@ -20,7 +19,7 @@ import argparse
 PRICE_LIMIT = 20
 
 
-def send_mail(args, subject, text):
+def send_mail(from_address, to_address, subject, text, smtp_login, smtp_pwd):
 
     import smtplib
 
@@ -30,11 +29,11 @@ def send_mail(args, subject, text):
         "Subject: %s",
         "",
         "%s"
-    ]) % (args.email, args.email, subject, text)
+    ]) % (from_address, to_address, subject, text)
     server_ssl = smtplib.SMTP_SSL("smtp.gmail.com", 465)
     server_ssl.ehlo()
-    server_ssl.login(args.google_login, args.google_pwd)
-    server_ssl.sendmail(args.email, args.email, message)
+    server_ssl.login(smtp_login, smtp_pwd)
+    server_ssl.sendmail(from_address, to_address, message)
     server_ssl.close()
 
 
@@ -50,15 +49,15 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def amazon_login(args):
+def amazon_login(email, password):
 
     browser = mechanize.Browser()
     browser.set_handle_robots(False)
 
     browser.open("https://www.amazon.fr/gp/sign-in.html")
     browser.select_form("signIn")
-    browser.form['email'] = args.amazon_login
-    browser.form['password'] = args.amazon_pwd
+    browser.form['email'] = email
+    browser.form['password'] = password
     browser.submit()
 
     return browser
@@ -67,12 +66,15 @@ def amazon_login(args):
 def main():
 
     args = parse_arguments()
-    browser = amazon_login(args)
+    browser = amazon_login(args.amazon_login, args.amazon_pwd)
     
     setlocale(LC_NUMERIC, '')
+
     wishlist_page = browser.open("https://www.amazon.fr/gp/registry/wishlist/1YNQGVVG7J07D/ref=topnav_lists_1")
     soup = BeautifulSoup(wishlist_page.read(), 'html.parser')
     books = soup.find_all("a", class_="a-link-normal a-declarative", id=re.compile("^itemName_"))
+
+    # Find cheap books
     book_dict = {}
     cheap_books = ""
     for book in books:
@@ -83,7 +85,10 @@ def main():
             cheap_books += "'" + book.string.strip() + "'" + " costs only " + "{:.2f}".format(atof(splitted_price[1])) + " EUR!\n"
         book_dict[book.string.strip()] = atof(splitted_price[1])
     
+    # Sort all the books from your wishlist by price.
     sorted_books = sorted(book_dict.items(), key=lambda x: x[1])
+
+    # Build up the text for the email and screen output.
     email_text = ""
     if cheap_books:
         email_text += "\nBooks that you consider cheap:\n"
@@ -93,14 +98,18 @@ def main():
     email_text += "-------------------------\n"
     for book in sorted_books:
         email_text += "{:6.2f}".format(book[1]) + " EUR  " + book[0] + "\n"
-    
-    if cheap_books:
-        send_mail(args,
-                  'Cheap book available alert!',
-                  email_text.encode('utf-8'))
-    
-    print email_text.encode('utf-8')
 
+    print email_text.encode('utf-8')
+    
+    # Send mail if there are cheap books available.
+    if cheap_books:
+        send_mail(args.email,
+                  args.email,
+                  'Cheap book available alert!',
+                  email_text.encode('utf-8'),
+                  args.google_login,
+                  args.google_pwd)
+    
 
 if __name__ == "__main__":
 
