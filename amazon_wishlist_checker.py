@@ -17,8 +17,12 @@ from bs4 import BeautifulSoup
 from locale import *
 import argparse
 
+PRICE_LIMIT = 20
+
 def send_mail(from_address, to_address, subject, text):
+
     import smtplib
+
     message = "\r\n".join([
         "From: %s",
         "To: %s",
@@ -33,53 +37,66 @@ def send_mail(from_address, to_address, subject, text):
     server_ssl.close()
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-e", "--email", help="Your email address", required=True)
-parser.add_argument("-al", "--amazon_login", help="Your Amazon login name", required=True)
-parser.add_argument("-ap", "--amazon_pwd", help="Your Amazon password", required=True)
-parser.add_argument("-gl", "--google_login", help="Your Google email address", required=True)
-parser.add_argument("-gp", "--google_pwd", help="Your Google password", required=True)
-args = parser.parse_args()
+def parse_arguments():
 
-browser = mechanize.Browser()
-browser.set_handle_robots(False)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-e", "--email", help="Your email address", required=True)
+    parser.add_argument("-al", "--amazon_login", help="Your Amazon login name", required=True)
+    parser.add_argument("-ap", "--amazon_pwd", help="Your Amazon password", required=True)
+    parser.add_argument("-gl", "--google_login", help="Your Google email address", required=True)
+    parser.add_argument("-gp", "--google_pwd", help="Your Google password", required=True)
 
-response = browser.open("https://www.amazon.fr/gp/sign-in.html")
-browser.select_form("signIn")
-browser.form['email'] = args.amazon_login
-browser.form['password'] = args.amazon_pwd
-browser.submit()
+    return parser.parse_args()
 
-PRICE_LIMIT = 20
-setlocale(LC_NUMERIC, '')
-wishlist_page = browser.open("https://www.amazon.fr/gp/registry/wishlist/1YNQGVVG7J07D/ref=topnav_lists_1")
-soup = BeautifulSoup(wishlist_page.read(), 'html.parser')
-books = soup.find_all("a", class_="a-link-normal a-declarative", id=re.compile("^itemName_"))
-book_dict = {}
-cheap_books = ""
-for book in books:
-    div_element = book.parent.parent.parent.parent
-    second_price = div_element.find("span", class_="a-color-price itemUsedAndNewPrice")
-    splitted_price = second_price.string.split()
-    if atof(splitted_price[1]) < PRICE_LIMIT:
-        cheap_books += "'" + book.string.strip() + "'" + " costs " + splitted_price[1] + " EUR!\n"
-    book_dict[book.string.strip()] = second_price.string.strip()
 
-sorted_books = sorted(book_dict.items(), key=lambda x: x[1])
-email_text = ""
-if cheap_books:
-    email_text += "\nBooks that you consider cheap:\n"
-    email_text += "-------------------------------\n"
-    email_text += cheap_books
-email_text += "\nWishlist sorted by price:\n"
-email_text += "-------------------------\n"
-for book in sorted_books:
-    email_text += book[1] + "  " + book[0] + "\n"
+def amazon_login():
 
-if cheap_books:
-    send_mail(args.email,
-              args.email,
-              "Cheap book available alert!",
-              email_text.encode('utf-8'))
+    browser = mechanize.Browser()
+    browser.set_handle_robots(False)
 
-print email_text.encode('utf-8')
+    response = browser.open("https://www.amazon.fr/gp/sign-in.html")
+    browser.select_form("signIn")
+    browser.form['email'] = args.amazon_login
+    browser.form['password'] = args.amazon_pwd
+    browser.submit()
+
+    return browser
+
+
+if __name__ == "__main__":
+
+    args = parse_arguments()
+    browser = amazon_login()
+    
+    setlocale(LC_NUMERIC, '')
+    wishlist_page = browser.open("https://www.amazon.fr/gp/registry/wishlist/1YNQGVVG7J07D/ref=topnav_lists_1")
+    soup = BeautifulSoup(wishlist_page.read(), 'html.parser')
+    books = soup.find_all("a", class_="a-link-normal a-declarative", id=re.compile("^itemName_"))
+    book_dict = {}
+    cheap_books = ""
+    for book in books:
+        div_element = book.parent.parent.parent.parent
+        second_price = div_element.find("span", class_="a-color-price itemUsedAndNewPrice")
+        splitted_price = second_price.string.split()
+        if atof(splitted_price[1]) < PRICE_LIMIT:
+            cheap_books += "'" + book.string.strip() + "'" + " costs " + splitted_price[1] + " EUR!\n"
+        book_dict[book.string.strip()] = second_price.string.strip()
+    
+    sorted_books = sorted(book_dict.items(), key=lambda x: x[1])
+    email_text = ""
+    if cheap_books:
+        email_text += "\nBooks that you consider cheap:\n"
+        email_text += "-------------------------------\n"
+        email_text += cheap_books
+    email_text += "\nWishlist sorted by price:\n"
+    email_text += "-------------------------\n"
+    for book in sorted_books:
+        email_text += book[1] + "  " + book[0] + "\n"
+    
+    if cheap_books:
+        send_mail(args.email,
+                  args.email,
+                  "Cheap book available alert!",
+                  email_text.encode('utf-8'))
+    
+    print email_text.encode('utf-8')
