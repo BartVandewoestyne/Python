@@ -19,6 +19,7 @@ import argparse
 
 PRICE_LIMIT = 20
 
+
 def send_mail(args, subject, text):
 
     import smtplib
@@ -54,7 +55,7 @@ def amazon_login(args):
     browser = mechanize.Browser()
     browser.set_handle_robots(False)
 
-    response = browser.open("https://www.amazon.fr/gp/sign-in.html")
+    browser.open("https://www.amazon.fr/gp/sign-in.html")
     browser.select_form("signIn")
     browser.form['email'] = args.amazon_login
     browser.form['password'] = args.amazon_pwd
@@ -79,23 +80,23 @@ def main():
         second_price = div_element.find("span", class_="a-color-price itemUsedAndNewPrice")
         splitted_price = second_price.string.split()
         if atof(splitted_price[1]) < PRICE_LIMIT:
-            cheap_books += "'" + book.string.strip() + "'" + " costs " + splitted_price[1] + " EUR!\n"
-        book_dict[book.string.strip()] = second_price.string.strip()
+            cheap_books += "'" + book.string.strip() + "'" + " costs only " + "{:.2f}".format(atof(splitted_price[1])) + " EUR!\n"
+        book_dict[book.string.strip()] = atof(splitted_price[1])
     
     sorted_books = sorted(book_dict.items(), key=lambda x: x[1])
     email_text = ""
     if cheap_books:
         email_text += "\nBooks that you consider cheap:\n"
-        email_text += "-------------------------------\n"
+        email_text += "------------------------------\n"
         email_text += cheap_books
     email_text += "\nWishlist sorted by price:\n"
     email_text += "-------------------------\n"
     for book in sorted_books:
-        email_text += book[1] + "  " + book[0] + "\n"
+        email_text += "{:6.2f}".format(book[1]) + " EUR  " + book[0] + "\n"
     
     if cheap_books:
         send_mail(args,
-                  "Cheap book available alert!",
+                  'Cheap book available alert!',
                   email_text.encode('utf-8'))
     
     print email_text.encode('utf-8')
