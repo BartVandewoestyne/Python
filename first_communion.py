@@ -5,6 +5,12 @@
 # TODO:
 #   - Do not store gallery.xml, but retrieve XML and process in memory.
 #   - Refactor to make everything more elegant.
+#   - Use OpenCV to remove the watermarks:
+#       https://www.quora.com/How-do-I-remove-a-watermark-from-an-image-using-Python-OpenCV
+#       http://docs.opencv.org/master/df/d3d/tutorial_py_inpainting.html
+#       http://docs.opencv.org/2.4/modules/photo/doc/inpainting.html
+#       http://math.univ-lyon1.fr/~masnou/fichiers/publications/survey.pdf
+#       https://fadili.users.greyc.fr/demos/WaveRestore/EMInpaint/index.html
 
 import os.path
 import urllib.request
