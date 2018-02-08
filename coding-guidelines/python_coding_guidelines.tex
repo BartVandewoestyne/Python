@@ -1,0 +1,11 @@
+\begin{guideline}
+Use the newer form for output formatting with the format function.
+\end{guideline}
+
+\begin{guideline}
+Use if __name__ == "__main__":
+
+http://stackoverflow.com/questions/419163/what-does-if-name-main-do
+
+One of the reasons for doing this is that sometimes you write a module (a .py file) where it can be executed directly. Alternatively, it can also be imported and used in another module. By doing the main check, you can have that code only execute when you want to run the module as a program and not have it execute when someone just wants to import your module and call your functions themselves.
+\end{guideline}
