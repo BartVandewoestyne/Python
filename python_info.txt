@@ -1,0 +1,82 @@
+http://stackoverflow.com/questions/582336/how-can-you-profile-a-python-script
+https://wiki.python.org/moin/PythonSpeed/PerformanceTips#Profiling_Code
+
+cProfile
+
+pycallgraph
+
+PyCharm (commercial edition)
+
+SnakeViz http://jiffyclub.github.io/snakeviz/
+
+Spyder
+
+Python Tools for Visual Studio
+https://github.com/Microsoft/PTVS/wiki
+
+Python distributions
+--------------------
+
+Anaconda:
+ A free distribution for the SciPy stack. Supports Linux, Windows and Mac.
+
+Enthought Canopy:
+  The free and commercial versions include the core SciPy stack packages.
+  Supports Linux, Windows and Mac.
+
+Python(x,y): A free distribution including the SciPy stack, based around the
+  Spyder IDE. Windows only.
+
+WinPython: A free distribution including the SciPy stack. Windows only.
+
+Pyzo: A free distribution based on Anaconda and the IEP interactive development
+  environment. Supports Linux, Windows and Mac.
+
+
+IDEs
+----
+* PyCharm
+* WingIDE: zou slechtere UI hebben
+* PyDev: Eclipse plugin
+* Komodo IDE: zou minder goed zijn dan de rest
+* Eric: lijkt niet echt ideaal
+
+To see what packages you have installed:
+  pip list
+However, make sure you are not using the Strawberry Perl pip!  Check what pip
+is in your path!
+
+
+Installing PIL
+--------------
+The Python Imaging Library (PIL) cannot be installed with pip 8.0.3, you get the error:
+
+"  Could not find a version that satisfies the requirement pil (from versions: )
+ No matching distribution found for pil"
+
+Note that PIL is no longer maintained:
+
+  http://www.pythonware.com/products/pil/
+  https://en.wikipedia.org/wiki/Python_Imaging_Library
+
+Since PIL is basically dead, you should install Pillow, which is a maintained
+fork of PIL:
+
+  http://python-pillow.org/
+
+To install, simply use pip:
+
+  pip install pillow
+
+
+
+Code coverage
+-------------
+Coverage.py is a useful tool to measure code coverage:
+
+  http://nedbatchelder.com/code/coverage/
+
+We currently use it to measure code coverage of our unit tests.  If the unit
+tests are OK, then the HTML coverage report is opened in your browser.  The
+logic for this is in the file python/utils/UnittestHelper.py and an example is
+in python/acuras/SP_Acuras.py::run_all_tests()
