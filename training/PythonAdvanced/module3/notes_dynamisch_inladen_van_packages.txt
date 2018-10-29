@@ -1,0 +1,28 @@
+je wil dingen doen als
+
+  if a == 2
+    load abc versie 1
+  if a == 3
+    load abc versie 2
+
+abc.func()
+
+imp.load_module
+je hebt enkel het pad naar je module nodig
+ en dan met de importlib.util.spec_from_file_location() and importlib.util.module_from_spec() de module laden via imp.load_module
+
+importlib ipv imp gebruiken, want dan kan je gewoon het pad geven.
+importlib.import_module
+
+imp is deprecated
+
+zowel imp als importlib zijn wrappers rond de __import()__
+
+use case:
+  verschillende versies van driver die ondersteund moet worden
+
+dyanmisch loaden is ok, best via factory in begin
+dynamisch reloaden is gevaarlijk
+
+handmatig unloaden: zie stackoverflow 'how do i unload / reload a python module'
+https://stackoverflow.com/questions/437589/how-do-i-unload-reload-a-python-module

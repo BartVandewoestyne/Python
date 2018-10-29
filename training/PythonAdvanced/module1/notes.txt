@@ -1,0 +1,149 @@
+Jochen Parmentier
+Jochen.Parmentier@altran.com
+
+7
+3 goeie boeken!
+
+9
+als je doorheen alles geitereerd bent, en hij is er zonder exceptie of break door gekomen, dan doe je de else
+
+10
+ook als de lijst leeg is krijg je true, wat mss wat onverwacht is!
+
+12
+Uit enumerate() komt een iterator
+
+13
+zip is om twee sequenties te mappen op elkaar
+als ze niet allebei evenveel elementen hebben, neemt zip de kortste lijst als referentie en valt de rest uit de niet kortste lijst weg
+lengte blijft beperkt tot de kortste lijst
+
+15
+als je maar één argument meegeeft bij range(), vertrek je van 0
+Er wordt aangeraden om met Python 3 te werken, tenzij je met legacy code zit.
+
+20
+je kan ook specifiek meegeven wat dat je wilt dat er gestript wordt (bvb enkel '\n')
+
+21
+lstrip stopt met strippen na de www.
+
+26
+Er wordt niet altijd met 4 spaties geëxpandeerd, maar is zich bewust van de formatting.
+Het is niet gewoon elke tab door 4 spaties vervangen!
+
+28
+floats evalueren ook naar false
+
+32
+Python geeft geen garanties over de volgorde waarin de elementen opgeslagen worden.
+Je kan logische operaties uitvoeren op je set.
+Alle duplicates worden weggesmeten in je set.
+__hash()__
+__id()__ (voor CPython is dat de integer waarde van je memory address)
+
+33
+set is niet hashable, je kan geen set van sets maken
+een frozenset is een set die je niet meer kan aanpassen
+je kan een set van frozensets maken
+je kan geen set van sets maken
+set is wel iterable, je kan er wel over itereren, maar je hebt geen garantie over de volgorde
+
+34
+toepassingen: het uniek maken van een ...
+
+41
+elke element van een set hoeft niet van hetzelfde type te zijn!
+zolang als ze hashable zijn, kunnen ze in dezelfde set terechtkomen
+
+42:
+wat is de usecase?
+Een klasse maken waarvoor je gewoon twee values kan in bijhouden.
+(vergelijkbaar met struct in C++???)
+wordt vaak gebruikt in combinatie met csv en sqlite
+
+44
+_make is in feite de constructor van je named tuple
+
+45
+namedtuples goed om memoryfootprint laag te houden
+
+51
+als je de hele range van je collectie gebruikt, krijg je een kopie van je collectie.
+
+52
+string is immutable, dus daarvoor gaat [:] niet en heb je dezelfde memory location
+
+53:
+m is slechts een shallow copy van l (je kopieert enkel de pointers naar de sublijsten)
+
+54
+wat is het nut van die shallow copies?
+in meeste gevallen is het een shallow copy die je nodig hebt, en je spaart memory uit
+deep copy is meer memory gebruik!
+
+56
+ordered dictionaries 
+
+57
+je bewaart de volgorden van inserten??? (dus niet de volgorde van 3 en 4?)
+
+58
+ze geven geen key error als je een key opvraagt die nog niet bestaat
+
+60
+je kan het gedrag meegeven als je een key opvraagt die nog niet bestaat
+voor eender welke key die niet bestaat, ga je een Foo erin steken of teruggeven???
+
+61
+twee dictionaries samenvoegen
+"update mijn dictionary en overschrijf de nieuwe waardes met de nieuwe waarden (die de oude dan vervangen)"
+
+66
+count lijkt op trange
+bij count ga je van je startwaarde tot oneindig, je kan blijven next aanvragen
+range werkt enkel met integers, bij count kan je ook met floats werken en bvb vanaf 0.5 starten
+
+68
+voor grote datasets best islice gebruiken
+islide( x, 1, 3) => exclusief 3, dus 3 zit er niet in
+
+71
+itertools en collections ga je typisch pas gebruiken voor grote data sets
+
+87
+het is dus in feite beter van het gewoon in 1 klasse te doen, als je ze toch wil apart zetten dan wschl enkel voor de leesbaarheid
+
+91
+een generator is een functie, geen klasse!
+
+92
+de yield zorgt er voor dat start een stateful variable wordt, die bijgehouden wordt bij elke oproep van next_increment
+yield start is een soort break voor je while, een soort pause, en als je er dan terug inkomt, gaat hij na de yield verder
+
+101
+je zit daar met een stateful functie (nested functie en je retourneert een functie)
+
+105:
+decorators zijn heel powerful tool in Python
+
+108
+
+abcd(self,...)
+
+@classmethod
+abcd(cls, ...)
+
+@staticmethod
+abcd(a, b)
+  return a+b
+
+@property
+def door(self)
+
+vind het wiel niet heruit, kijk welke decorators er al bestaan!
+staticmethod en classmethod zijn vaak gebruikte
+
+py -3 -m pydoc -p 8080 sys
+py -3 -m pydoc -b sys
+voordeel: documentatie in sync met code

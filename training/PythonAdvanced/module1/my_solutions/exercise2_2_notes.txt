@@ -1,0 +1,6 @@
+Op slide 44 staat als read mode nog 'rb', maar dat is voor Python 2.  De 'b' mag weg (staat voor 'binary').
+
+'unpacking' is dat ding met dat sterretje
+https://docs.python.org/2/tutorial/controlflow.html#unpacking-argument-lists
+
+'dict unpacking'

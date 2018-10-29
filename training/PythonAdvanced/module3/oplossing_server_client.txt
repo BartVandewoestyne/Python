@@ -1,0 +1,3 @@
+listen(1) omdat je weet dat je maar 1 client zal hebben
+
+client: als recv geen data meer geeft, ga je uit de while

@@ -1,0 +1,166 @@
+28
+listen() -> aantal connecties die gequeued kunnen zijn, zonder dat er al een verbinding is.
+Als je bvb 1 neemt, en er zijnt wee clients, de tweede client zal blokken totdat de eerste client aan de server kant geaccepteerd is?
+
+30
+client zal blocken totdat de server de verbinding heeft geaccepteerd.
+
+31
+De enige die een buffer interface ondersteunen zijn:
+  - bytes (immutable)
+  - bytearray (mutable)
+dus strings kan je niet meegeven
+Check altijd dat het aantal bytes dat je verzonden hebt overeenkomt met wat je
+van send krijgt!
+
+32
+return waarde is hier niet te checken?  hij blijft sturen?
+meestal gebruikt hij sendall
+op de socket kan je eventueel een timeout zetten voor de calls
+
+33
+wat er binnenkomt is minder dan 4096 bytes
+Vuisregel om de grootte van je buffer te bepalen is best: denk na wat ja maximaal kan verwachten van ontvangen data, en doe dat maal twee.
+
+34
+data is een referentie naar de data in de socket layer
+je maakt elke keer een kopie van alldata omdat alldata een bytes object is
+en immutable is.  memory usage gaat om hoog
+
+35
+om het vorige tegen te gaan, kan je rechtstreeks in een buffer inlezen
+in een keer de alldata buffer maken en daarin receiven
+Hoe weet je op welke positie in de buffer je wegschrijft.
+
+38
+het werkt niet omdat je met slicing een kopie maakt van een subset van het
+bestaande object.
+
+39
+memoryview lost het op
+
+43:
+97 is de ASCII-waarde van 'a'.
+
+48
+c is de socket
+het is wschl makefile die zal blocken totdat de data binennkomt
+Wat gebeurt er als je twee dumps doet en dan pas flusht??? check!
+
+50
+als je geen close() doet, weet de client niet dat je socket geclosed wordt
+en zal hij moeten timeouten.  Het is dus proper naar je client to om te closen.
+
+56
+Selenium is een interessante library
+Object Oriented API om browsers te driven die de browser driver interface
+implementeren.
+Lesgever gebruikt het dagelijks, want het is vaste tool voor test automation.
+
+60
+in data zit een bytes object (immutable)
+
+64
+je stuurt de HTTP_POST via de urlopen
+de urlopen is blocking tot je het antwoord van de pagina terugkreeg
+
+65
+verschil met 64 is dat je het niet in een request object moet stoppen en niet
+moet encode naar bytes, het blijft een string.
+
+67
+PEP8
+PEP20
+PEPXXX
+PEPs zijn geaccepteerde pull requests voor de Python standaard
+
+71
+er kunnen nog wijzigingen zijn in asyncio, het is nog niet stabiel.
+mss dus nog niet zo nuttig om in productie te gebruiken
+
+73
+Parallel (op z'n minst meerdere cores aan het gebruiken)
+  threads
+  asyncio is optioneel parallel
+Concurrency (meerdere threads of processen op 1 core)
+  threads
+  asyncio
+parallellisatie betekent automatisch concurrency, concurrency kan ook zonder parallellisatie
+
+74
+je hoeft niet van Thread over te erven, zolang er maar een run() is.
+
+77
+aan de t.join() zie je dat je met synchronisatie bezig bent
+
+81
+er kan maar 1 thread access hebben tot de memory space van CPython
+Je kan wel threads op 2 processors opstarten, maar 2 threads kunnen niet tegelijk lopen omdat ze de memory tegelijk accessen.
+Je kan geen twee threads tegelijk aan het runnen zijn.
+CPU-bound: geen voordeel van threading, zelfs nadeel wegens overhead van threading
+I/O bound (bvb externe poorten), je kan wel met twee externe processen communiceren tegelijkertijd
+
+Threading niet gebruiken in Python als je CPU-bound bent, want het is slecht!
+Zie presentatie uit 2010 van David Beazley
+Understanding the Python GIL
+http://www.dabeaz.com/talks.html
+
+Jython en IronPython gebruiken het java en .Net memory model, en hebben dus geen last van die slechte threading.
+
+95
+elk subprocess heeft zijn eigen memory space? Of toch niet???
+Het is de 'state sharing' die je bij multiprocessing niet hebt, bij threads wel.
+
+96
+vergeet niet dat je voor de args een tuple moet meegeven.
+
+99
+een pool is een verzameling van workers
+hier worden werkelijk 100 processen opgestart, en telkens 4 zullen actief zijn (cpu_count())
+
+100
+de pool.map() is blocking
+de map_async() is niet blocking
+je maakt een pool aan, laat processen opstarten, en dan doe je verder in je main thread.
+iets verder synchroniseer je via result.wait() en daarna heb je je resultaat en kan je het opvragen via get().
+wait() is blocking en kan je timeout geven
+get() is optioneel blocking
+
+102
+concurrent.futures is by design ... (concurrent?)
+
+103
+Je submit een callable, en in de backend van ThreadPoolExecutor
+
+104:
+MulitiProcessing vs concurrent.futures:
+concurrent futures heeft die executer die je meer kan configureren, heeft ook een add_done_callback
+de executor kan je meer configureren, en die is intelligenter in zijn keuze wat hij schedulet
+
+109
+Hoe zet je een aktie op de scheduler.  Met enter zet je iets op de scheduler
+enter(5, 1, ...
+5: kijk wat je tijd nu is, en 5 seconden later voer je de taak uit
+enterabs() kan je gebruiken voor absolute tijd, maar dan moet je je bewust zijn op welke manier je scheduler de tijd ziet
+
+111
+als je de ene op 1 sec set, en de tweede op 2 sec, maar de eerste duurt bvb 3 seconden, dan....
+Het is jouw taak om te zorgen dat ze goed geschedulet worden (ze worden sowieso uitgevoerd)
+
+114
+er is iets weggevallen op de slide: time => timeout
+
+115
+deze queue is echt een queue voor het sharen van data tussen processen/threads/taken?  het is thread safe (met een gewone List zou dit bvb niet zijn)
+de queue garandeert dat alles thread-safe is
+Vaak zullen er callables inzitten
+enkel als je task_done() doet, wordt je counter gedecrement, niet bij get().
+q.join() blijft blocken tot de counter van je queue op nul geraakt is. (totdat alle afhandeling van je processen klaar is)
+
+task_done() kan je bvb gebruiken als een tweede proces het element uit de queue heeft
+opgevraagd heeft verwerkt en dan wil melden dat het er klaar mee is.
+
+Gerrit
+Github private repositories
+GitLab (betalend)
+Jenkins draaien in de cloud (amazon + Docker Hub + ...)

@@ -1,0 +1,121 @@
+Iedereen gebruikt pip om packages te installen.
+
+pip is een beetje als apt-get
+
+tegenwoordig hebben alle python distributies pip
+
+op pypy kan iedereen packages plaatsen, er is geen review proces
+zoek dus de beste packages, deze die meest gedownload worden
+
+27
+info wordt niet naar stdout geprint
+default logging level is warning
+
+31
+level=logging.DEBUG (is weggevallen op slide)
+alleen de eerste call van basicConfig zal de configuratie doen, het is een
+set once operatie.  Alle volgende calls worden genegeerd.
+Zonder filename wordt het naar stderr gestuurd.
+
+32
+Er zijn 3 formatting styles die je kan kiezen (via de style kwarg)
+1: % (default)
+2: $ string.Template formatting
+3: { string.format
+
+35
+best practice: geef logger de naam van de huidige module via __name__
+zonder argumenten is de default logger name 'root'
+Best 1 keer een logger aanmaken per module, en injecteren via input
+parameters in je functie of constructor.
+
+38
+handlers bepalen de destination van je logrecord
+
+39
+SocketHandler = TCP/IP
+DatagramHandler = UDP
+Op Windows heb je ook nog: NTEventLogHandler
+
+44
+[logger_log07]
+level=logging.DEBUG
+handler=hand01
+
+[handler_hand01]
+filter=...
+
+46
+dictConfig is de aangeraden manier van de Python standaard om je logging
+te configureren.
+dictConfig is een YAML file.
+te parsen met de pyyaml library
+version: 1 moet er ergens instaan (version moet 1 zijn)
+
+56
+voorlopig best nog logbook niet gebruiken, wordt voorlopig afgeraden.
+
+97
+Als je wil weten hoeveel reference counts er nog zijn naar een object:
+sys.getrefcount(obj)
+ => de call naar getrefcount is ook een reference, dus je krijgt minstens 2
+als count terug (de ene ref en de ref via getrefcount)
+
+99
+Wat betekenen de 10 en 10?
+level0 => level 1 => level 2
+
+gc.getreferences
+=> geeft hoeveel references de garbage collector nog ziet
+
+106
+doorstreep 'Releasing resources'
+want de python standaard garandeert niet dat ... gereleaset worden?
+
+CFFI
+module in python die het mogelijk maakt om C headers in te laden?
+Om C-code te runnen in je Python programma.
+https://cffi.readthedocs.io/
+
+109:
+Zeker je eigen versie van de documentatie van de Garbage collector die bij
+jouw versie van Python hoort, want bvb tussen Python 3.5 en 3.6 verschillen
+er wel wat.
+
+124
+writeback=True zetten
+
+REMARK
+inspect.getsource(s) kan je gebruiken om van een unpickled object de source
+terug te vragen.
+
+persistence oefening 2 heeft te maken met de watchdog library.
+
+***********************************
+Binary data
+11
+h/h moet h/H zijn
+
+********************* DEBUGGING ************
+62: Python 2 magic, niet op ingegaan, trek er maar een grote streep door, geen reden meer om zoiets zelf te designen.
+
+Je kan je Python interpreter wel runnen met de -v flag, wat de verbose mode opzet.
+
+https://github.com/spiside/pdb-tutorial
+
+************ PROFILING *****************
+
+85
+number = aantal iteraties die hij moet doen, en over dewelke hij moet averagen
+
+voordeel van timeit over time:
+  aantal operaties
+  schakelt de garbage collector uit (al wil je dat soms wel, dus timeit dan mss best niet gebruiken)
+  more accurate dan time
+
+90
+met pip install snakeviz installeren
+lesgevers persoonlijke keuze is gprof2dot
+
+*********** VENV *************
+

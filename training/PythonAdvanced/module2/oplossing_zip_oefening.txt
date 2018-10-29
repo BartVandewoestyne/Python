@@ -1,0 +1,6 @@
+Zonder named tuple
+
+Met named tuple niet vergeten je tuple unpacking te doen via *data
+=> reden om het zo te doen: kleinere memory footprint (class die enkel om data bij te houden is, dan beter named tuple gebruiken)
+
+Als er niet genoeg data meer staat op het einde zal je unpack een exception gooien.

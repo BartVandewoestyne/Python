@@ -1,0 +1,9 @@
+listen(1)
+betekent niet dat je maar 1 connectie mag hebben
+maar wel dat er altijd maar 1 niet-geaccepteerde mag ... ?
+
+voor printen moet je de lock gebruiken, want standard out is de shared resource van deze oefening.
+lock doorgeven om te kunnen printen in die afhandelingsfunctie
+
+laatste lijn: in threads.items(), als de thread nog alive is, ga je die terug in de dictionary steken,
+dus je kijkt gewoon als de thread nog leeft, en als hij niet meer leeft smijt je hem uit de dictionary.

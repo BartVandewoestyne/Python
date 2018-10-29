@@ -1,0 +1,5 @@
+scheduler aanmaken
+binnen 1 seconde aanmaken
+
+door de while loop ga je telkens opnieuw en opnieuw de scheduler kicken.
+is stom voorbeeld, want een scheduler met 1 taak... waarom heb je dan een scheduler nodig???

@@ -1,0 +1,21 @@
+De modeloplossing is voor alle 3 samen
+
+argparse.FileType handler is wrapper rond het open commando om het proper af te handelen, als je 'open' gebruikt, krijg je je ganse stacktrace erbij als je een ongeldige file meegeeft.
+FileType is een wrapper rond open om het te kunnen gebruiken in je parser
+
+nargs opties:
+  => N
+  => ? (minstens 1)
+  => '*' zoveel als je wil, niet minstens 1
+  => '+'
+
+result.update(*remaining) is 'list unpacking'
+
+ipv sets[0] pop 0 doen
+
+
+Merk op dat je de file opent en niet closet bij argparse.FileType
+=> de modeloplossing werkt, maar je zit met dangling pointer als je het in een module stopt.
+Dus beter 'context management' gebruiken om het veilig te doen.
+
+'with open' doet de close automatisch

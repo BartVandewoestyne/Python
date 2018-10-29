@@ -1,0 +1,4 @@
+uuid is om unieke ids te genereren zodat verschillende robots.txt elkaar niet overschrijven.
+
+[-1] betekent laatste element in een list.  We splitten dus de url op '/' en
+nemen het laatste element, wat robots.txt zal zijn.

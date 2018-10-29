@@ -1,0 +1,10 @@
+26.6.1. Using Mock
+
+real.method(3, 4, 5, key='value')
+=> je zegt dus dat het de eerste keer 3, dan 4 en dan 5 moet retourneren
+
+je kan ook kijken of er bepaalde methods gecalled zijn.
+
+26.6.1.3 Mocking Classes
+met die patch kan je zorgen dat telkens als er een instantie van module.Foo wordt gemaakt,
+dat het je mock is en niet de originele klasse

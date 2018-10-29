@@ -1,0 +1,7 @@
+action='store true' => hij moet de count opslaan
+dan kan je er op testen met if args.count
+
+with => is 'context management' gebruiken
+
+items()
+most_common()
