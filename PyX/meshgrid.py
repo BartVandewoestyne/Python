@@ -7,6 +7,7 @@
 #   xpdf meshgrid.pdf (and select 'Full screen')
 #
 # TODO:
+#   - Vector graphics or bitmap output might need to be flipped horizontally or vertically.
 #   - Investigate why the last lines are not drawn in the PNG.
 
 from pyx import *
