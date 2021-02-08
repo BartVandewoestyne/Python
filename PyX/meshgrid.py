@@ -46,8 +46,15 @@ def readWarp(warpfile):
 
 
 def drawLine(line):
-    c.stroke(path.line(*line), linestyle)
+
+    # Bitmap coordinates follow same X/Y axes convention as our warpgrids.
     draw.line(line, fill=255)
+
+    # Vector graphics coordinates have a different Y axes convention and
+    # need to be flipped upside down.
+    line[1] = height - line[1]
+    line[3] = height - line[3] 
+    c.stroke(path.line(*line), linestyle)
 
 
 def saveWarpImages(warpfile):
@@ -93,7 +100,7 @@ for row in range(0, nrows):
         ydisplacement = warp['yFlats'][idx]
         
         xcoords[idx] = col*deltax + xdisplacement
-        ycoords[idx] = height - (row*deltay + ydisplacement)  # Y-coordinates are upside-down.
+        ycoords[idx] = row*deltay + ydisplacement
 
 # Prepare for vector-graphics drawing using PyX.
 c = canvas.canvas()
