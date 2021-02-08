@@ -5,9 +5,14 @@
 #   gv meshgrid.pdf (and scale to 'Fit to window')
 #
 #   xpdf meshgrid.pdf (and select 'Full screen')
+#
+# Converg SVN to PNG with
+#
+#   inkscape -z -w 2560 -h 1600 in.svg -e out.png
 
 from pyx import *
 from xml.dom.minidom import *
+
 import math
 import os
 import random
@@ -96,3 +101,5 @@ for row in range(0,  nrows-1):
 
 basename, extension = os.path.splitext(warpfile)
 c.writePDFfile(basename + ".pdf")
+c.writeEPSfile(basename + ".eps")
+c.writeSVGfile(basename + ".svg")
