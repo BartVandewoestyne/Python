@@ -6,12 +6,12 @@
 #
 #   xpdf meshgrid.pdf (and select 'Full screen')
 #
-# Converg SVN to PNG with
-#
-#   inkscape -z -w 2560 -h 1600 in.svg -e out.png
+# TODO:
+#   - Investigate why the last lines are not drawn in the PNG.
 
 from pyx import *
 from xml.dom.minidom import *
+from PIL import Image, ImageDraw
 
 import math
 import os
@@ -42,9 +42,20 @@ def readWarp(warpfile):
     warp['xFlats'] = [float(xFlatValue) for xFlatValue in xFlatsString.split()]
     warp['yFlats'] = [float(yFlatValue) for yFlatValue in yFlatsString.split()]
     return warp
-    
 
-unit.set(defaultunit="pt")
+
+def drawLine(line):
+    c.stroke(path.line(*line), linestyle)
+    draw.line(line, fill=255)
+
+
+def saveWarpImages(warpfile):
+    basename, extension = os.path.splitext(warpfile)
+    c.writePDFfile(basename + ".pdf")
+    c.writeEPSfile(basename + ".eps")
+    c.writeSVGfile(basename + ".svg")
+    im.save(basename + ".png", "PNG")
+    
 
 warpfile = sys.argv[1]
 warp = readWarp(warpfile)
@@ -61,6 +72,8 @@ width = warp['xrange']
 height = warp['yrange']
 deltax = width/(ncols-1)
 deltay = height/(nrows-1)
+print(f'deltaX = {deltax} pixels')
+print(f'deltaY = {deltay} pixels')
 
 xcoords = [0]*nbpoints
 ycoords = [0]*nbpoints
@@ -81,25 +94,31 @@ for row in range(0, nrows):
         xcoords[idx] = col*deltax + xdisplacement
         ycoords[idx] = height - (row*deltay + ydisplacement)  # Y-coordinates are upside-down.
 
+# Prepare for vector-graphics drawing using PyX.
 c = canvas.canvas()
-
 linestyle = [style.linewidth(1.0), color.rgb.blue]
+unit.set(defaultunit="pt")
+
+# Prepare for bitmap drawing using PIL.
+# Note that when drawing an image with resolution width x height, the
+# coordinates of the pixels range from 0..width-1 and 0..height-1.
+im = Image.new('RGB', (width, height), (255, 255, 255))
+draw = ImageDraw.Draw(im)
 
 # Draw 'horizontal' line segments.
 for row in range(0, nrows):
     for col in range(0, ncols-1):
         idxStart = row*nrows + col
         idxEnd = idxStart + 1
-        c.stroke(path.line(xcoords[idxStart], ycoords[idxStart], xcoords[idxEnd], ycoords[idxEnd]), linestyle)
+        horLine = [xcoords[idxStart], ycoords[idxStart], xcoords[idxEnd], ycoords[idxEnd]]
+        drawLine(horLine)
 
 # Draw 'vertical' line segments.
 for row in range(0,  nrows-1):
     for col in range(0, ncols):   
         idxStart = row*nrows + col
         idxEnd = (row+1)*nrows + col
-        c.stroke(path.line(xcoords[idxStart], ycoords[idxStart], xcoords[idxEnd], ycoords[idxEnd]), linestyle)
+        vertLine = [xcoords[idxStart], ycoords[idxStart], xcoords[idxEnd], ycoords[idxEnd]]
+        drawLine(vertLine)
 
-basename, extension = os.path.splitext(warpfile)
-c.writePDFfile(basename + ".pdf")
-c.writeEPSfile(basename + ".eps")
-c.writeSVGfile(basename + ".svg")
+saveWarpImages(warpfile)
