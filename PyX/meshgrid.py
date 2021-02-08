@@ -5,24 +5,58 @@
 #   gv meshgrid.pdf (and scale to 'Fit to window')
 #
 #   xpdf meshgrid.pdf (and select 'Full screen')
-#
-# TODO:
-#   * Load X and Y displacements and resolution from XML-file.
 
 from pyx import *
+from xml.dom.minidom import *
+import math
+import os
 import random
+import sys
+
+# Source:
+#   https://stackoverflow.com/questions/15390807/integer-square-root-in-python
+# Note that since Python 3.8, there is math.isqrt()
+def isqrt(n):
+    x = n
+    y = (x + 1) // 2
+    while y < x:
+        x = y
+        y = (x + n // x) // 2
+    return x
+
+
+def readWarp(warpfile):
+    dom = parse(warpfile)    
+    XFlatParametersElement = dom.getElementsByTagName("X-FlatParameters")[0]
+    YFlatParametersElement = dom.getElementsByTagName("Y-FlatParameters")[0]
+    xFlatsString = XFlatParametersElement.firstChild.nodeValue
+    yFlatsString = YFlatParametersElement.firstChild.nodeValue
+    warp = dict()
+    warp['xrange'] = int(XFlatParametersElement.getAttribute("range"))
+    warp['yrange'] = int(YFlatParametersElement.getAttribute("range"))
+    warp['xFlats'] = [float(xFlatValue) for xFlatValue in xFlatsString.split()]
+    warp['yFlats'] = [float(yFlatValue) for yFlatValue in yFlatsString.split()]
+    return warp
+    
 
 unit.set(defaultunit="pt")
 
-nrows = 33
-ncols = 33
-width = 2560
-height = 1600
+warpfile = sys.argv[1]
+warp = readWarp(warpfile)
 
+nrows = isqrt(len(warp['xFlats']))
+ncols = isqrt(len(warp['yFlats']))
+nbpoints = nrows*ncols
+assert nrows*nrows == len(warp['xFlats'])
+assert ncols*ncols == len(warp['yFlats'])
+
+print(f'Found a {nrows} x {ncols} grid ({nbpoints} grid points in total).')
+
+width = warp['xrange']
+height = warp['yrange']
 deltax = width/(ncols-1)
 deltay = height/(nrows-1)
 
-nbpoints = nrows*ncols
 xcoords = [0]*nbpoints
 ycoords = [0]*nbpoints
 
@@ -30,14 +64,21 @@ for row in range(0, nrows):
     for col in range(0, ncols):
         idx = row*nrows + col
         factor = 0.5  # determines how much deformation of the grid we have.
-        xdisplacement = factor*random.uniform(-deltax/2, deltax/2)
-        ydisplacement = factor*random.uniform(-deltay/2, deltay/2)
+        
+        # Random X and Y displacements.
+        #xdisplacement = factor*random.uniform(-deltax/2, deltax/2)
+        #ydisplacement = factor*random.uniform(-deltay/2, deltay/2)
+
+        # X and Y displacements from warp file
+        xdisplacement = warp['xFlats'][idx]
+        ydisplacement = warp['yFlats'][idx]
+        
         xcoords[idx] = col*deltax + xdisplacement
-        ycoords[idx] = row*deltay + ydisplacement
+        ycoords[idx] = height - (row*deltay + ydisplacement)  # Y-coordinates are upside-down.
 
 c = canvas.canvas()
 
-linestyle = [style.linewidth.THICK, color.rgb.blue]
+linestyle = [style.linewidth(1.0), color.rgb.blue]
 
 # Draw 'horizontal' line segments.
 for row in range(0, nrows):
@@ -53,4 +94,5 @@ for row in range(0,  nrows-1):
         idxEnd = (row+1)*nrows + col
         c.stroke(path.line(xcoords[idxStart], ycoords[idxStart], xcoords[idxEnd], ycoords[idxEnd]), linestyle)
 
-c.writePDFfile("meshgrid")
+basename, extension = os.path.splitext(warpfile)
+c.writePDFfile(basename + ".pdf")
