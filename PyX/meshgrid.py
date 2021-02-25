@@ -8,6 +8,7 @@
 #
 # TODO:
 #   - Investigate why the last lines are not drawn in the PNG.
+#   - Draw rectangle representing (0,0-(maxX, maxY) in black.
 
 from pyx import *
 from xml.dom.minidom import *
@@ -30,6 +31,7 @@ def isqrt(n):
     return x
 
 
+# TODO: warn if the XML is not valid (e.g. no range attribute)
 def readWarp(warpfile):
     dom = parse(warpfile)    
     XFlatParametersElement = dom.getElementsByTagName("X-FlatParameters")[0]
@@ -79,11 +81,14 @@ width = warp['xrange']
 height = warp['yrange']
 deltax = width/(ncols-1)
 deltay = height/(nrows-1)
-print(f'deltaX = {deltax} pixels')
-print(f'deltaY = {deltay} pixels')
+print(f'deltaX between grid points = {deltax} pixels')
+print(f'deltaY between grid points = {deltay} pixels')
 
 xcoords = [0]*nbpoints
 ycoords = [0]*nbpoints
+
+xcoordsFile = open("xcoords.txt", "w")
+ycoordsFile = open("ycoords.txt", "w")
 
 for row in range(0, nrows):
     for col in range(0, ncols):
@@ -100,6 +105,15 @@ for row in range(0, nrows):
         
         xcoords[idx] = col*deltax + xdisplacement
         ycoords[idx] = row*deltay + ydisplacement
+        
+        xcoordsFile.write("{:18} ".format(xcoords[idx]));
+        ycoordsFile.write("{:18} ".format(ycoords[idx]));
+
+    xcoordsFile.write("\n");
+    ycoordsFile.write("\n");
+
+xcoordsFile.close()
+ycoordsFile.close()
 
 # Prepare for vector-graphics drawing using PyX.
 c = canvas.canvas()
