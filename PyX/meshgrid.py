@@ -142,4 +142,9 @@ for row in range(0,  nrows-1):
         vertLine = [xcoords[idxStart], ycoords[idxStart], xcoords[idxEnd], ycoords[idxEnd]]
         drawLine(vertLine)
 
+# Draw non-warped warp resolution rectangle.
+shape = [(0, 0), (width, height)]
+draw.rectangle(shape, outline ="black")
+c.stroke(path.rect(0, 0, width, height))
+
 saveWarpImages(warpfile)
